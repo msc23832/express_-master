@@ -1,0 +1,188 @@
+<!-- views/SendEmail.ejs -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Send Email</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+    <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style type="text/css">img#logo-tp{margin:0 auto;display:-webkit-box;margin-top:50px}.panel-primary>.panel-heading{color:#fff;background-color:#25292d;border-color:#040404}.btn-primary{    float: right;color:#fff;background-color:#2f2f2f;border-color:#353535}.panel-primary{border-color:#e8e8e8}.btn-primary.active,.btn-primary.focus,.btn-primary:active,.btn-primary:focus,.btn-primary:hover,.open>.dropdown-toggle.btn-primary{color:#fff;background-color:#212121;border-color:#333}
+    </style>
+    <link href="/css/sticky-footer.css" rel="stylesheet">
+
+</head>
+
+<body>
+<div class="container">
+    <%- include('partials/navbar') %>
+    <div class=" col-lg-10 col-md-9 col-sm-9">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h1 class="panel-title">Send Email</h1>
+        </div>
+        <div class="panel-body" >
+        <p class="bg-info" id="msg"></p>
+         <form class="form-horizontal" role="form" id="emailForm" method="post">
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="SelectEmailTemplate">Select Email Template :</label>
+              <div class="col-sm-10">
+                <select class="form-control" name="sender" required>
+                      <option selected value="">Choose...</option>
+                      <% posts.forEach((post) => { %>
+                        <option value="<%= post.IDEmailTemplate %>"><%= post.Name %></option>
+                      <% }) %>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Filter">Filter Start:</label>
+                <div class='col-sm-10'>
+
+                        <div class='input-group date' id='datetimepicker6'>
+                            <input type='text' class="form-control" placeholder="Select Start Date" data-date-format="DD/MM/YYYY" readonly />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="Filter">Filter End:</label>
+                <div class='col-sm-10'>
+                        <div class='input-group date' id='datetimepicker7'>
+                            <input type='text' class="form-control" placeholder="Select End Date" data-date-format="DD/MM/YYYY" readonly />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="Group">Market sec :</label>
+                <div class="col-sm-10">
+                  <select class="form-control" name="marketsec" required>
+                      <option selected value="">( Unknown )</option>
+                        <option value="Admin">Admin</option>
+                        <option value="User">User</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="Rateplan">Rate plan :</label>
+                <div class="col-sm-10">
+                  <select class="form-control" name="rateplan" required>
+                      <option selected value="">OTARO</option>
+                        <option value="TOTORO">TOTORO</option>
+                        <option value="MAGURO">MAGURO</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="Status">Status :</label>
+                <div class="col-sm-10">
+                  <select class="form-control" name="status" required>
+                      <option selected value="">In house</option>
+                        <option value="Outhouse">Out house</option>
+                        <option value="User">User</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-sm-2" for="Preference">Preference :</label>
+                <div class="col-sm-10">
+                  <select class="form-control" name="preference" required>
+                      <option selected value="">( Unknown )</option>
+                        <option value="Admin">Admin</option>
+                        <option value="User">User</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-offset-2 col-sm-10">
+                <button id="search" class="btn btn-primary" type="button">
+                   <span class="glyphicon glyphicon-send" ></span> Search
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+</div>
+<%- include('partials/footer') %>
+<!-- <form action="/upload" method="post" id="UploadImage" enctype="multipart/form-data">
+        <label class="control-label col-sm-2" for="image">Image:</label>
+        <div class="col-sm-10">
+          <input type="file" name="myFile">
+        </div>
+        <input type="submit" id="upload" value="UPLOAD">
+      </form> -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#datetimepicker6').datetimepicker({
+          ignoreReadonly: true
+        });
+
+        $('#datetimepicker7').datetimepicker({
+          ignoreReadonly: true
+        });
+
+       // $('#datepickerEnd').datepicker({
+       //       dateFormat: 'dd/mm/yy'
+       // });
+    });
+</script>
+
+<script>
+
+    $(function(){
+      var fullUrl =  location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/SendEmail';
+        $("#search").click(function(){
+          var formData = $("#emailForm").serialize();
+          //alert(formData);
+
+          $("#msg").text("Email sending Please wait..");
+                    $.ajax({
+                      url: fullUrl+'/send',
+                        type: 'POST',
+                          data: formData,
+                                success: function(result) {
+                                     $("#msg").empty().text(result);
+                                      },
+                                error: function(e) {
+                                     $("#msg").empty().text("There is some error to send email, Error code:"+e.status +", Error message:"+e.statusText);
+                           },
+                    dataType: "html",
+                    timeout: 60000
+                });
+        });
+
+    });
+
+</script>
+
+</body>
+</html>

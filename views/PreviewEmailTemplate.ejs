@@ -1,0 +1,121 @@
+<!-- views/PreviewEmailTemplate.ejs -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Preview EmailTemplate</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+    <link href="/css/sticky-footer.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <%- include('partials/navbar') %>
+        <div class=" col-lg-10 col-md-9 col-sm-9">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h2 class="panel-title">Preview Email Template : <%= HIposts.Name %></h1>
+            </div>
+
+            <div class="panel-body">
+              <div class="form-group">
+              <!-- Image -->
+              <img src="data:image/png;base64,<%= HIposts.Logo %>" class="img-responsive center-block" alt="No Image">
+              <!-- Image -->
+              </div>
+
+              <div class="col-sm-8">
+                  <div class="form-group">
+                    <p><label class="control-label col-sm-13" for="from"><%= Message1 %></label></p>
+                    <p><label class="control-label col-sm-13" for="from"><%= Message2 %></label></p>
+                    <p><label class="control-label col-sm-13" for="from"><%= HIposts.Address %></label></p>
+                  </div>
+              </div>
+
+              <div class="col-sm-4">
+                    <img src="data:image/png;base64,<%= Img1 %>" class="img-responsive" alt="No Image">
+
+                    </br>
+
+                    <img src="data:image/png;base64,<%= Img2 %>" class="img-responsive" alt="No Image">
+              </div>
+
+              <div class="col-sm-8">
+                <div class="form-group">
+                      <a class="btn btn-primary" href="/EditEmailTemplate/<%= IDEmailTemplate %>">BACK</a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+
+
+          </div>
+        </div>
+
+    </div>
+    <%- include('partials/footer') %>
+<script>
+    $(function(){
+      var fullUrl = location.href;
+      //var fullUrl =  location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/EditEmailTemplate/:IDEmailTemplate';
+        $("#save").click(function(){
+          var formData = $("#emailForm").serialize();
+          alert(formData);
+
+          //$("#msg").text("Email sending Please wait..");
+                    $.ajax({
+                      url: fullUrl+'/save',
+                        type: 'POST',
+                          data: formData,
+                                success: function(result) {
+                                    alert("success");
+                                     //$("#msg").empty().text(result);
+                                      },
+                                error: function(e) {
+                                    alert("There is some error to Update EmailTemplate, Error code:"+e.status +", Error message:"+e.statusText);
+                                     //$("#msg").empty().text("There is some error to send email, Error code:"+e.status +", Error message:"+e.statusText);
+                           },
+                    dataType: "html",
+                    timeout: 60000
+                });
+        });
+
+        $("#delete").click(function(){
+          var formData = $("#emailForm").serialize();
+          //alert(formData);
+
+          //$("#msg").text("Email sending Please wait..");
+                    $.ajax({
+                      url: fullUrl+'/delete',
+                        type: 'POST',
+                          data: formData,
+                                success: function(result) {
+                                    alert("delete success");
+                                    //var temp=location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/EmailTemplate';
+                                    //$(location).attr('href',temp);
+                                     //$("#msg").empty().text(result);
+                                      },
+                                error: function(e) {
+                                    alert("There is some error to Delete EmailTemplate, Error code:"+e.status +", Error message:"+e.statusText);
+                                     //$("#msg").empty().text("There is some error to send email, Error code:"+e.status +", Error message:"+e.statusText);
+                           },
+                    dataType: "html",
+                    timeout: 60000
+                });
+        });
+    });
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,353 @@
+<!-- views/EditEmailTemplate.ejs -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Edit EmailTemplate</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+    <link href="/css/sticky-footer.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <%- include('partials/navbar') %>
+        <div class=" col-lg-10 col-md-9 col-sm-9">
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h2 class="panel-title">Email Template : <%= HIposts.Name %></h1>
+            </div>
+
+            <div class="panel-body">
+              <!-- Image -->
+              <img src="data:image/png;base64,<%= HIposts.Logo %>" class="img-responsive center-block" alt="No Image">
+              <!-- Image -->
+            </div>
+          </div>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h2 class="panel-title">Information</h2>
+            </div>
+
+
+              <div class="panel-body">
+                <form class="form-horizontal" role="form" id="emailForm" method="post">
+                <div class="col-sm-8">
+                  <div class="form-group">
+                    <input type="text" name="code" placeholder="Enter Code" class="form-control custom-control" value="<%= Code %>" required/>
+                  </div>
+
+                  <div class="form-group">
+                    <input type="text" name="name" placeholder="Enter Name" class="form-control custom-control" value="<%= Name %>" required/>
+                  </div>
+
+                  <div class="form-group">
+                    <textarea class="form-control custom-control" placeholder="Enter Message1" name="message1" rows="4" style="resize:none" required><%= Message1 %></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <textarea class="form-control custom-control" placeholder="Enter Message2" name="message2" rows="4" style="resize:none" required><%= Message2 %></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <h3> Email Sender : </h3>
+                    <select class="form-control" name="Sender" required>
+                      <option selected value="">Choose...</option>
+                      <% Sysposts.forEach((Syspost) => { %>
+                        <option value="<%= Syspost.IDEmailSystem %>"><%= Syspost.Email %></option>
+                      <% }) %>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <button type="button" id="save" data-toggle="modal" data-target="#EditModal" class="btn btn-success">SAVE</button>
+
+                    <a class="btn btn-info" href="/PreviewEmailTemplate/<%= IDEmailTemplate %>">PREVIEW</a>
+
+                    <button type="button" id="delete" data-toggle="modal" data-target="#DeleteModal" class="btn btn-danger">DELETE</button>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <input id="upload-input1" type="file" name="uploads1[]" multiple="multiple" required>
+                    <img src="data:image/png;base64,<%= Img1 %>" class="img-responsive" id="img1" alt="No Image">
+
+                    </br>
+
+                    <input id="upload-input2" type="file" name="uploads2[]" multiple="multiple" required>
+                    <img src="data:image/png;base64,<%= Img2 %>" class="img-responsive" id="img2" alt="No Image">
+                </div>
+
+
+                <!-- set up the modal to start hidden and fade in and out -->
+                <div id="DeleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <!-- dialog header -->
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="exampleModalLabel">WARNING DELETE!!</h4>
+                      </div>
+                      <!-- dialog body -->
+                      <div class="modal-body">
+                        <p>Do You Want Delete EmailTemplate : <%= Name %> ?</p>
+                      </div>
+                      <!-- dialog buttons -->
+                      <div class="modal-footer">
+                        <button type="button" id="ConfirmDel" class="btn btn-success">OK</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- set up the modal to start hidden and fade in and out -->
+                <div id="EditModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <!-- dialog header -->
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="exampleModalLabel">WARNING EDIT!!</h4>
+                      </div>
+                      <!-- dialog body -->
+                      <div class="modal-body">
+                        <p>Do You Want Edit EmailTemplate : <%= Name %> ?</p>
+                      </div>
+                      <!-- dialog buttons -->
+                      <div class="modal-footer">
+                        <button type="button" id="ConfirmEdit" class="btn btn-success">OK</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">CANCEL</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- set up the modal to start hidden and fade in and out -->
+                <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <!-- dialog header -->
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="exampleModalLabel"> </h4>
+                      </div>
+                      <!-- dialog body -->
+                      <div class="modal-body">
+                        <p> </p>
+                      </div>
+                      <!-- dialog buttons -->
+                      <div class="modal-footer">
+                        <button type="button" id="Confirm" data-dismiss="modal" class="btn btn-success">OK</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                </form>
+              </div>
+
+
+          </div>
+        </div>
+
+    </div>
+    <%- include('partials/footer') %>
+<script>
+  $(document).ready(function() {
+    $(".form-control option[value='<%= IDEmailSystemTP %>']")
+        .prop("selected",true);
+    //$("#Sender").val(<%= IDEmailSystemTP %>);
+     //$("#Sender").prop("selectedIndex", <%= IDEmailSystemTP %>);
+  });
+
+    $(function(){
+      var fullUrl = location.href;
+      //var fullUrl =  location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/EditEmailTemplate/:IDEmailTemplate';
+        $("#ConfirmEdit").click(function(){
+
+          // test if any of the values are not empty
+          var is_empty = false;
+          $('[required]').each( function(idx, elem) {
+              is_empty = is_empty || ($(elem).val() == '');
+          });
+
+          // now do the thing, but only if ALL the values are not empty
+          if(! is_empty){
+
+          var formData = $("#emailForm").serialize();
+          //alert(formData);
+
+                    $.ajax({
+                      url: fullUrl+'/save',
+                        type: 'POST',
+                          data: formData,
+                                success: function(result) {
+                                    $('#myModal').find('.modal-title').text('WARNING!!');
+                                        $('#myModal').find('.modal-body').text(result);
+                                        $("#myModal").modal('show');
+                                        $("#EditModal").modal('hide');
+                                        $("#Confirm").click(function(){
+                                          window.location = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/EmailTemplate';
+                                        });
+                                      },
+                                error: function(e) {
+                                    $('#myModal').find('.modal-title').text('ERROR!!');
+                                        $('#myModal').find('.modal-body').text("There is some error to Delete Users, Error code:"+e.status +", Error message:"+e.statusText);
+                                        $("#myModal").modal('show');
+                                        $("#EditModal").modal('hide');
+                           },
+                    dataType: "html",
+                    timeout: 60000
+                });
+          }
+        });
+
+        $("#ConfirmDel").click(function(){
+          var formData = $("#emailForm").serialize();
+          //alert(formData);
+          $.ajax({
+             url: fullUrl+'/delete',
+               type: 'POST',
+                  data: formData,
+                     success: function(result) {
+                           //alert("result");
+                                $('#myModal').find('.modal-title').text('WARNING!!');
+                                        $('#myModal').find('.modal-body').text(result);
+                                        $("#myModal").modal('show');
+                                        $("#DeleteModal").modal('hide');
+                                        $("#Confirm").click(function(){
+                                          window.location = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/EmailTemplate';
+                                        });
+                     },
+                     error: function(e) {
+                           //alert("There is some error to Delete EmailTemplate, Error code:"+e.status +", Error message:"+e.statusText);
+                                $('#myModal').find('.modal-title').text('ERROR!!');
+                                        $('#myModal').find('.modal-body').text("There is some error to Delete Users, Error code:"+e.status +", Error message:"+e.statusText);
+                                        $("#myModal").modal('show');
+                                        $("#DeleteModal").modal('hide');
+                     },
+                     dataType: "html",
+                     timeout: 60000
+          });
+
+        });
+
+
+        $('#upload-input1').on('change', function(){
+
+          readURL1(this);
+
+          var files = $(this).get(0).files;
+
+          if (files.length > 0){
+            // create a FormData object which will be sent as the data payload in the
+            // AJAX request
+            var formData = new FormData();
+
+            // loop through all the selected files and add them to the formData object
+            for (var i = 0; i < files.length; i++) {
+              var file = files[i];
+
+              // add the files to formData object for the data payload
+              formData.append('uploads1[]', file, file.name);
+            }
+
+            //alert(formData);
+
+            $.ajax({
+              url: fullUrl+'/upload1',
+              type: 'POST',
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function(data){
+                  console.log('upload successful!\n' + data);
+              }
+            });
+
+          }
+        });
+
+        $('#upload-input2').on('change', function(){
+
+          readURL2(this);
+
+          var files = $(this).get(0).files;
+
+          if (files.length > 0){
+            // create a FormData object which will be sent as the data payload in the
+            // AJAX request
+            var formData = new FormData();
+
+            // loop through all the selected files and add them to the formData object
+            for (var i = 0; i < files.length; i++) {
+              var file = files[i];
+
+              // add the files to formData object for the data payload
+              formData.append('uploads2[]', file, file.name);
+            }
+
+            //alert(formData);
+
+            $.ajax({
+              url: fullUrl+'/upload2',
+              type: 'POST',
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function(data){
+                  console.log('upload successful!\n' + data);
+              }
+            });
+
+          }
+        });
+
+    });
+
+  function readURL1(input) {
+
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $('#img1').attr('src', e.target.result);
+          }
+
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+
+  function readURL2(input) {
+
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function (e) {
+              $('#img2').attr('src', e.target.result);
+          }
+
+          reader.readAsDataURL(input.files[0]);
+      }
+  }
+
+</script>
+
+</body>
+
+</html>

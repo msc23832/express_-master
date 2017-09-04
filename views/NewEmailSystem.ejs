@@ -1,0 +1,155 @@
+<!-- views/NewEmailSystem.ejs -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>New EmailSystem</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+    <link href="/css/sticky-footer.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <%- include('partials/navbar') %>
+        <div class=" col-lg-10 col-md-9 col-sm-9">
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h2 class="panel-title">Create Email System</h1>
+            </div>
+
+            <div class="panel-body">
+            <form class="form-horizontal" role="form" id="emailForm" method="post">
+              <div class="form-group">
+                <div class="col-3">
+                <label class="control-label col-sm-2" for="image">Host :</label>
+                </div>
+                <div class="col-sm-10">
+                  <input type="text" name="host" placeholder="Enter Host" class="form-control custom-control" required/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="image">Port :</label>
+                <div class="col-sm-10">
+                  <input type="text" name="port" placeholder="Enter Port" class="form-control custom-control" required/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="image">Proxy :</label>
+                <div class="col-sm-10">
+                  <input type="text" name="proxy" placeholder="Enter Proxy" class="form-control custom-control" required/>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="Detail">Detail :</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control custom-control" name="detail" placeholder="Enter Detail" rows="4" style="resize:none" required></textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="image">Email :</label>
+                <div class="col-sm-10">
+                  <input type="text" name="email" placeholder="Enter Email" class="form-control custom-control" required/>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="control-label col-sm-2" for="image">Password :</label>
+                <div class="col-sm-10">
+                  <input type="password" name="password" placeholder="Enter Password" class="form-control custom-control" required/>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="button" id="save" class="btn btn-success">SAVE</button>
+                </div>
+              </div>
+
+              <!-- set up the modal to start hidden and fade in and out -->
+                <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <!-- dialog header -->
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="exampleModalLabel"> </h4>
+                      </div>
+                      <!-- dialog body -->
+                      <div class="modal-body">
+                        <p> </p>
+                      </div>
+                      <!-- dialog buttons -->
+                      <div class="modal-footer">
+                        <button type="button" id="Confirm" data-dismiss="modal" class="btn btn-success">OK</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+            </form>
+            </div>
+          </div>
+        </div>
+
+    </div>
+    <%- include('partials/footer') %>
+<script>
+    $(function(){
+      var fullUrl = location.href;
+      //var fullUrl =  location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '')+'/EditEmailTemplate/:IDEmailTemplate';
+        $("#save").click(function(){
+
+          var is_empty = false;
+          $('[required]').each( function(idx, elem) {
+              is_empty = is_empty || ($(elem).val() == '');
+          });
+
+          // now do the thing, but only if ALL the values are not empty
+          if(! is_empty){
+
+          var formData = $("#emailForm").serialize();
+          //alert(fullUrl);
+
+                    $.ajax({
+                      url: fullUrl+'/save',
+                        type: 'POST',
+                          data: formData,
+                                success: function(result) {
+                                  $('#myModal').find('.modal-title').text('WARNING!!');
+                                        $('#myModal').find('.modal-body').text(result);
+                                        $("#myModal").modal('show');
+                                        $("#Confirm").click(function(){
+                                          location.reload(true);
+                                        });
+                                      },
+                                error: function(e) {
+                                    //alert("There is some error to Update EmailSystem, Error code:"+e.status +", Error message:"+e.statusText);
+                                     $('#myModal').find('.modal-title').text('ERROR!!');
+                                        $('#myModal').find('.modal-body').text("There is some error to Save Users, Error code:"+e.status +", Error message:"+e.statusText);
+                                        $("#myModal").modal('show');
+                           },
+                    dataType: "html",
+                    timeout: 60000
+                });
+
+          }
+
+        });
+    });
+
+</script>
+
+</body>
+
+</html>
