@@ -1,0 +1,22 @@
+{
+  "name": "speednodemailers",
+  "version": "0.0.1",
+  "description": "NodeJs email form to send email using nodejs",
+  "dependencies": {
+    "body-parser": "~1.13.1",
+    "cors": "^2.8.4",
+    "ejs": "^2.5.7",
+    "express": "~4.2.0",
+    "express-fileupload": "^0.1.3",
+    "formidable": "^1.1.1",
+    "fs": "0.0.1-security",
+    "mssql": "^4.0.4",
+    "nodemailer": "^4.0.1",
+    "path": "^0.12.7",
+    "tedious": "^2.0.0"
+  },
+  "devDependencies": {
+    "express": "~4.2.0",
+    "multer": "^1.3.0"
+  }
+}
