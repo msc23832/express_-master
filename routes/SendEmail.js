@@ -123,26 +123,30 @@ router.get('/market', function (req, res) {
 
 router.get('/rateplan', function (req, res) {
 
-  var connection = new sql.ConnectionPool(Config.ArnomaDB);
+  //setTimeout(function () {
 
-  connection.connect().then(function () {
-
-
-    var request = new sql.Request(connection);
-
-    // query to the database and get the records
-    request.query('SELECT distinct(rsl.rsl_rateplan) as rateplan FROM P5RESERVATIONLIST as rsl', function (err, recordset) {
-
-      if (err) {
-        res.json(err.message);
-        connection.close();
-      } else {
-        res.json(recordset.recordset);
-        connection.close();
-      }
-
-    });
-  });
+    var connection = new sql.ConnectionPool(Config.ArnomaDB);
+    
+      connection.connect().then(function () {
+    
+    
+        var request = new sql.Request(connection);
+    
+        // query to the database and get the records
+        request.query('SELECT distinct(rsl.rsl_rateplan) as rateplan FROM P5RESERVATIONLIST as rsl', function (err, recordset) {
+    
+          if (err) {
+            res.json(err.message);
+            connection.close();
+          } else {
+            res.json(recordset.recordset);
+            connection.close();
+          }
+    
+        });
+      });
+    
+  //}, 10000);
 });
 
 router.get('/status', function (req, res) {
@@ -275,7 +279,7 @@ router.post('/send', function (req, res) {
         const post = posts.filter((post) => {
           return post.HTMLTemplate
         })[0]
-        console.log(post);
+        //console.log(post);
 
         res.json(recordset.recordset);
         connection.close();
@@ -285,14 +289,13 @@ router.post('/send', function (req, res) {
           host: "smtp.gmail.com", // hostname
           //host: `${post.Host}`,
           //secureConnection: false, // use SSL
-          secureConnection: false,
-          //requiresAuth: true,
-          port: 587,
+          secure: true,
+          port: 465,
           //port: `${post.Port}`, // port for secure SMTP
-          tls: {
-            // do not fail on invalid certs
-            ciphers: 'SSLv3'
-          },
+          // tls: {
+          //   // do not fail on invalid certs
+          //   ciphers: 'SSLv3'
+          // },
           auth: {
             //user: 'arnomainf@arnoma.com',
             //pass: 'infarnoma'
@@ -437,7 +440,7 @@ router.post('/send', function (req, res) {
           });
         });
 
-        
+
       }
 
     });
@@ -475,7 +478,7 @@ router.post('/resend', function (req, res) {
         connection.close();
 
         var smtpTransport = nodemailer.createTransport({
-           //host: 'mail.arnoma.com',
+          //host: 'mail.arnoma.com',
           host: "smtp.gmail.com", // hostname
           //host: `${post.Host}`,
           //secureConnection: false, // use SSL
@@ -502,7 +505,7 @@ router.post('/resend', function (req, res) {
           to: 'sivaccha@metrosystems.co.th',
           subject: 'Get this responsive email template',//req.body.subject, // Subject line
           //text: "{{username}}", // plaintext body
-      
+
           html: `${post.HTMLTemplate}`,
           attachments: [
             {   // encoded string as an attachment
@@ -567,34 +570,34 @@ router.post('/resend', function (req, res) {
             },
           ]
         }
-      
+
         var SenderReplace = mailOptions.html;
-      
+
         mailOptions.html = SenderReplace.replace('#Sender', `${req.body.user}`).replace('#customer', `${req.body.firstname}`).replace('#arrival', `${req.body.arrival}`).replace('#departure', `${req.body.departure}`).replace('#confirm', `${req.body.Confirmation}`).replace('#rate', `${req.body.rsl_rateplan}`).replace('#room', `${req.body.roomtype}`);
-      
-      
+
+
         //console.log(mailOptions.html);
-      
-      
+
+
         smtpTransport.sendMail(mailOptions, (error, response) => {
-      
-      
+
+
           var connection = new sql.ConnectionPool(Config.EmailDB);
-      
+
           connection.connect().then(function () {
-      
-      
+
+
             var request = new sql.Request(connection);
-      
-      
+
+
             if (error) {
-      
+
               console.log(error);
               console.log(req.body);
-      
+
               // query to the database and get the records
               request.query(`UPDATE [EmailSending] SET [Email] = '${req.body.Email}', [Date] = GETDATE() , [User] = '${req.body.User}', [StatusSend] = 0 WHERE [IDSendEmail] = '${req.body.IDSendEmail}'`, function (err, recordset) {
-      
+
                 if (err) {
                   res.json(err.message);
                   connection.close();
@@ -604,15 +607,15 @@ router.post('/resend', function (req, res) {
                   connection.close();
                 }
               })
-      
+
             } else {
-      
+
               console.log(req.body);
               console.log(req.body.Email);
-      
+
               // query to the database and get the records
               request.query(`UPDATE [EmailSending] SET [Email] = '${req.body.Email}', [Date] = GETDATE() , [User] = '${req.body.User}', [StatusSend] = 1 WHERE [IDSendEmail] = '${req.body.IDSendEmail}'`, function (err, recordset) {
-      
+
                 if (err) {
                   console.log(err);
                   res.json(err.message);
@@ -623,9 +626,9 @@ router.post('/resend', function (req, res) {
                   connection.close();
                 }
               })
-      
+
             }
-      
+
           });
         });
 
@@ -634,7 +637,7 @@ router.post('/resend', function (req, res) {
     });
   });
 
-  
+
 });
 
 module.exports = router;
