@@ -7,7 +7,9 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var http = require('http');
 var port = Number(process.env.PORT || 8080);
-//var mssql = require('mssql');
+
+var Config = require('./DBConfig');
+var mssql = require('mssql');
 
 express = require('express');
 
@@ -43,10 +45,53 @@ app.use('/', (req, res) => {
 // set the view engine to ejs
 
 app.set(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
+var server = app.listen(port, () => {
+  // Success callback
+  console.log(`Listening at http://localhost:${port}/`);
+});
 
+var io = require('socket.io')(server);
+var i = 0;
+io.on('connection', function (socket) {
+  socket.on('add-message', (data) => {
+    //socket.emit('message', data);
+
+    var connection = new mssql.ConnectionPool(Config.EmailDB);
+    
+    connection.connect().then(function () {
+    
+      var request = new mssql.Request(connection);
+    
+      // query to the database and get the records
+      request.query("SELECT top 100 Email as _email,CASE WHEN StatusSend = 1 THEN 'success' ELSE 'false' END as _status FROM EmailSending order by Date desc",
+        function (err, recordset) {
+    
+          if (err) {
+            console.log('error');
+            socket.emit('message', err.message);
+            //res.json(err.message);
+            connection.close();
+          } else {
+            console.log(recordset.recordset);
+            //res.render('Users', {posts: recordset.recordset});
+            socket.emit('message', recordset.recordset);
+            //res.json(recordset.recordset);
+            connection.close();
+          }
+        });
+    
+    });
+    
+    // data=+ i++ +""+ '- ' + data    ;
+    // console.log(data);
+    // socket.emit('message', data);
+    
+  });
+
+});
 
 
 // blog home page
@@ -80,7 +125,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 // }));
 
 // call http
-app.listen(port)
+//app.listen(port)
 console.log('listening on port ' + port)
 
 
