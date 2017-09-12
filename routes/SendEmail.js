@@ -286,12 +286,12 @@ router.post('/send', function (req, res) {
 
         var smtpTransport = nodemailer.createTransport({
           //host: 'mail.arnoma.com',
-          host: "smtp.gmail.com", // hostname
-          //host: `${post.Host}`,
+          //host: "smtp.gmail.com", // hostname
+          host: `${post.Host}`,
           //secureConnection: false, // use SSL
           secure: true,
-          port: 465,
-          //port: `${post.Port}`, // port for secure SMTP
+          //port: 465,
+          port: `${post.Port}`, // port for secure SMTP
           // tls: {
           //   // do not fail on invalid certs
           //   ciphers: 'SSLv3'
@@ -299,18 +299,15 @@ router.post('/send', function (req, res) {
           auth: {
             //user: 'arnomainf@arnoma.com',
             //pass: 'infarnoma'
-            user: 'xonyfirst1@gmail.com',
-            pass: 'Rata2810'
-            //user: `${post.Email}`,
-            //pass: `${post.Password}`
+            user: `${post.Email}`,
+            pass: `${post.Password}`
           }
         });
 
 
         var mailOptions = {
-          from: 'xonyfirst1@gmail.com' + "<arnomainf@arnoma.com>", // sender address
-          //to: `${req.body.email}`, // list of receivers
-          to: 'sivaccha@metrosystems.co.th',
+          from: `${post.Email}` + "<arnomainf@arnoma.com>", // sender address
+          to: `${req.body.email}`, // list of receivers
           subject: 'Get this responsive email template',//req.body.subject, // Subject line
           //text: "{{username}}", // plaintext body
 
@@ -479,30 +476,27 @@ router.post('/resend', function (req, res) {
 
         var smtpTransport = nodemailer.createTransport({
           //host: 'mail.arnoma.com',
-          host: "smtp.gmail.com", // hostname
-          //host: `${post.Host}`,
+          //host: "smtp.gmail.com", // hostname
+          host: `${post.Host}`,
           //secureConnection: false, // use SSL
-          secureConnection: false,
+          secure: true,
           //requiresAuth: true,
-          port: 587,
-          //port: `${post.Port}`, // port for secure SMTP
-          tls: {
-            // do not fail on invalid certs
-            ciphers: 'SSLv3'
-          },
+          //port: 587,
+          port: `${post.Port}`, // port for secure SMTP
+          // tls: {
+          //   // do not fail on invalid certs
+          //   ciphers: 'SSLv3'
+          // },
           auth: {
             //user: 'arnomainf@arnoma.com',
             //pass: 'infarnoma'
-            user: 'xonyfirst1@gmail.com',
-            pass: 'Rata2810'
-            //user: `${post.Email}`,
-            //pass: `${post.Password}`
+            user: `${post.Email}`,
+            pass: `${post.Password}`
           }
         });
         var mailOptions = {
-          from: 'xonyfirst1@gmail.com' + "<arnomainf@arnoma.com>", // sender address
-          //to: `${req.body.Email}`, // list of receivers
-          to: 'sivaccha@metrosystems.co.th',
+          from: `${post.Email}` + "<arnomainf@arnoma.com>", // sender address
+          to: `${req.body.Email}`, // list of receivers
           subject: 'Get this responsive email template',//req.body.subject, // Subject line
           //text: "{{username}}", // plaintext body
 
