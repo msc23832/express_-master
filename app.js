@@ -6,7 +6,7 @@ var cors = require('cors');
 var path = require('path');
 var bodyParser = require('body-parser');
 var http = require('http');
-var port = Number(process.env.PORT || 8080);
+var port = Number(process.env.PORT || 2017);
 
 var Config = require('./DBConfig');
 var mssql = require('mssql');
