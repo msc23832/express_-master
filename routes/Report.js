@@ -25,10 +25,11 @@ router.post('/', function (req, res) {
     if (req.body.user != "" && req.body.user != undefined) {
       if (req.body.user == "null") {
         query += ` and User = '${req.body.user}' `;
-      } 
-    } else {
-      query += ` and User = 'Arnoma' `;
-    }
+      }
+    } 
+    // } else {
+    //   query += ` and User = 'Arnoma' `;
+    // }
     if (req.body.Template != "" && req.body.Template != undefined) {
       query += ` and [Form] = (SELECT Code FROM [EmailTemplate] WHERE [IDEmailTemplate] = '${req.body.Template}')`;
     }
