@@ -20,7 +20,11 @@ router.post('/', function (req, res) {
   connection.connect().then(function () {
 
     var query = `SELECT [IDSendEmail] ,[Name] ,[Room] ,[Email] ,[Form] ,convert(VARCHAR(10), [Date], 106) as Date ,[MarketSegmentCode] ,[rsl_rateplan] ,[User] ,[Status] ,[Floor] ,[Preference] ,[StatusSend]
-        FROM EmailSending where ([Date] >= '${req.body.DateArr}' and [Date] <= '${req.body.DateDep}') `;
+        FROM EmailSending where ([Date] >= '${req.body.DateArr}')`;
+    
+    if (req.body.DateDep != "" && req.body.DateDep != undefined) {
+        query += ` and [Date] <= '${req.body.DateDep}' `;
+    }
 
     if (req.body.user != "" && req.body.user != undefined) {
       if (req.body.user == "null") {
