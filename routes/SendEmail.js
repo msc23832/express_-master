@@ -50,7 +50,7 @@ router.post('/getArnoma', function (req, res) {
   connection.connect().then(function () {
 
     var query = `SELECT ROW_NUMBER() OVER (ORDER BY  rsl.rsl_firstname) ID , rsl.rsl_firstname + ' ' + rsl.rsl_lastname  as firstname, rsl.rsl_confirmationnumber as Confirmation, rsl.rsl_room as room, room.ROO_FLOOR as Floor 
-    , convert(VARCHAR(10), rsl.rsl_arrivaldate, 106) as arrival, convert(VARCHAR(10), rsl.rsl_departuredate, 106) as departure,  rsl.rsl_email as email, rsl.rsl_roomtype as roomtype
+    , convert(VARCHAR(10), rsl.rsl_arrivaldate, 105) as arrival, convert(VARCHAR(10), rsl.rsl_departuredate, 105) as departure,  rsl.rsl_email as email, rsl.rsl_roomtype as roomtype
         ,rsl.rsl_status , rsl.rsl_rateplan , rs.MarketSegmentCode , resp.PreferenceCode 
         FROM P5RESERVATIONLIST as rsl 
         left join reservationstay rst on rsl.rsl_reservationid=rst.ReservationID 
@@ -308,7 +308,7 @@ router.post('/send', function (req, res) {
         var mailOptions = {
           from: `${post.Email}` + "<arnomainf@arnoma.com>", // sender address
           to: `${req.body.email}`, // list of receivers
-          subject: 'Get this responsive email template',//req.body.subject, // Subject line
+          subject: `${post.Topics}`,//req.body.subject, // Subject line
           //text: "{{username}}", // plaintext body
 
           html: `${post.HTMLTemplate}`,
@@ -497,7 +497,7 @@ router.post('/resend', function (req, res) {
         var mailOptions = {
           from: `${post.Email}` + "<arnomainf@arnoma.com>", // sender address
           to: `${req.body.Email}`, // list of receivers
-          subject: 'Get this responsive email template',//req.body.subject, // Subject line
+          subject: `${post.Topics}`,//req.body.subject, // Subject line
           //text: "{{username}}", // plaintext body
 
           html: `${post.HTMLTemplate}`,
